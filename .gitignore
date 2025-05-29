@@ -1,0 +1,26 @@
+# ignore all png files
+*.png
+
+# ignore all jpg files
+*.jpg
+
+# ignore all jpeg files
+*.jpeg
+
+# ignore all icon files
+*.ico
+
+# ignore all svg files
+*.svg
+
+# ignore all gif files
+*.gif
+
+# ignore all webp files
+*.webp
+
+# ignore all bmp files
+*.bmp
+
+#ignore all zip files
+*.zip

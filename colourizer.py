@@ -3,6 +3,15 @@ from PIL import Image
 import sys
 import os
 
+def load_text_file(_input_path):
+    try: 
+        with open(_input_path, 'r') as file:
+            string = file.readlines()
+        return string;
+    except IOError:
+        print(f"Error: Unable to open text file at {_input_path}")
+        sys.exit(1)
+    
 def colour_tuple_to_hex(red, green, blue):
     """
     Convert RGB color tuple to hex string.
@@ -37,6 +46,7 @@ def load_image(_input_path):
 
     return img
 
+
 def colorize_image(_input_path, _colour):
     # Open the original image
     origninal_image = load_image(_input_path)
@@ -65,27 +75,53 @@ def colorize_image(_input_path, _colour):
     ## return the colorized image
     return colorized_image
 
-
-
 def main():
-    if len(sys.argv) != 5:
-        print("Usage: python colourizer.py <input_image_path> <red> <green> <blue>")
-        sys.exit(1)
 
-    ## Parse command line arguments
-    input_image_path = sys.argv[1]
-    red = int(sys.argv[2])
-    green = int(sys.argv[3])
-    blue = int(sys.argv[4])
-    colour = (red, green, blue)
+    ## If called with 5 arguments, the first is the script name, the next three are RGB values
+    if len(sys.argv) == 5:
+         ## Parse command line arguments
+        input_image_path = sys.argv[1]
+        red = int(sys.argv[2])
+        green = int(sys.argv[3])
+        blue = int(sys.argv[4])
+        colour = (red, green, blue)
 
-    ## Get the colorized image
-    colorized_image = colorize_image(input_image_path, colour)
+        ## Get the colorized image
+        colorized_image = colorize_image(input_image_path, colour)
 
-    ## Save the colorized image
-    colorized_image.save(f"{input_image_path.replace(".png", f"-{colour_tuple_to_hex(red, blue, green)}")}.png");
+        ## Save the colorized image
+        colorized_image.save(f"{input_image_path.replace(".png", f"-{colour_tuple_to_hex(red, blue, green)}")}.png");
 
-    
+
+
+    ## If called with 2 argument use as text file with comma separated path, R, G, B values. One image recolorized per line.
+    if len(sys.argv) == 2:
+        input_text_path = sys.argv[1]
+        lines = load_text_file(input_text_path)
+
+        for line in lines:
+            parts = line.strip().split(',')
+            if len(parts) != 4:
+                print(f"Error: Invalid line format in {input_text_path}: {line.strip()}")
+                continue
+            
+            input_image_path = parts[0].strip()
+            try:
+                red = int(parts[1].strip())
+                green = int(parts[2].strip())
+                blue = int(parts[3].strip())
+            except ValueError:
+                print(f"Error: Invalid RGB values in {input_text_path}: {line.strip()}")
+                continue
+            
+            colour = (red, green, blue)
+
+            ## Get the colorized image
+            colorized_image = colorize_image(input_image_path, colour)
+
+            ## Save the colorized image
+            colorized_image.save(f"{input_image_path.replace('.png', f'-{colour_tuple_to_hex(red, blue, green)}')}.png")
+        
 ## Run the main function if this script is executed directly
 if __name__ == "__main__":
     main()
