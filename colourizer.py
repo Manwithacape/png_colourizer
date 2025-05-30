@@ -3,6 +3,12 @@ from PIL import Image
 import sys
 import os
 
+def is_valid_rgb(_value):
+    """
+    Check if the given value is a valid RGB color component (0-255).
+    """
+    return isinstance(_value, int) and 0 <= _value <= 255
+
 def load_text_file(_input_path):
     try: 
         with open(_input_path, 'r') as file:
@@ -92,8 +98,6 @@ def main():
         ## Save the colorized image
         colorized_image.save(f"{input_image_path.replace(".png", f"-{colour_tuple_to_hex(red, blue, green)}")}.png");
 
-
-
     ## If called with 2 argument use as text file with comma separated path, R, G, B values. One image recolorized per line.
     if len(sys.argv) == 2:
         input_text_path = sys.argv[1]
@@ -118,8 +122,8 @@ def main():
 
             ## Get the colorized image
             colorized_image = colorize_image(input_image_path, colour)
-
-            ## Save the colorized image
+            
+            ## Save the colorized image with a new name based on the RGB values
             colorized_image.save(f"{input_image_path.replace('.png', f'-{colour_tuple_to_hex(red, blue, green)}')}.png")
         
 ## Run the main function if this script is executed directly
